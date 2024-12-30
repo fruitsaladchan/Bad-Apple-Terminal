@@ -36,23 +36,27 @@ pip install image
 ```bash
 ffmpeg -i bad_apple.mp4 -vn -acodec pcm_s16le -ar 44100 -ac 2 audio.wav
 ```
+2. makes frame directory
+```bash
+mkdir framse
+```
 
-2. Extract frames from the video:
+3. Extract frames from the video:
 ```bash
 ffmpeg -i bad_apple.mp4 -vf scale=180:70 -r 30 frames/%d.png
 ```
 
-3. Convert frames to grayscale raw format:
+4. Convert frames to grayscale raw format:
 ```bash
 python ./frame-extract.py
 ```
 
-4. Compile :
+5. Compile :
 ```bash
 gcc -o badapple badapple.c -lSDL2 $(sdl2-config --cflags)
 ```
 
-5. Run the player:
+6. Run the player:
 ```bash
 ./badapple
 ```
