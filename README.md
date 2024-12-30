@@ -38,7 +38,7 @@ ffmpeg -i bad_apple.mp4 -vn -acodec pcm_s16le -ar 44100 -ac 2 audio.wav
 ```
 2. makes frame directory
 ```bash
-mkdir framse
+mkdir frames
 ```
 
 3. Extract frames from the video:
