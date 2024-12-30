@@ -26,12 +26,14 @@ struct timespec start_time, pause_time;
 unsigned long total_pause_time = 0;
 unsigned long frame_count = 0;
 
+// Terminal settings
 struct termios orig_termios;
 
 void signal_handler(int signum) {
     running = 0;
 }
 
+// Function to make terminal read non-blocking
 void set_nonblocking_input() {
     struct termios new_termios;
     tcgetattr(STDIN_FILENO, &orig_termios);
@@ -39,6 +41,7 @@ void set_nonblocking_input() {
     new_termios.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
     
+    // Set non-blocking
     int flags = fcntl(STDIN_FILENO, F_GETFL, 0);
     fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
 }
@@ -99,6 +102,7 @@ void render_frame(const unsigned char* frame_data) {
     clear_screen();
     move_cursor(2);
     
+    // Show pause status
     if (paused) {
         printf("  [PAUSED] Press SPACE to resume\n");
     } else {
@@ -125,7 +129,7 @@ unsigned long get_microseconds() {
 void check_keyboard_input() {
     char c;
     if (read(STDIN_FILENO, &c, 1) > 0) {
-        if (c == ' ') {  // spacebar
+        if (c == ' ') {  // Spacebar
             paused = !paused;
             if (paused) {
                 clock_gettime(CLOCK_MONOTONIC, &pause_time);
@@ -144,6 +148,7 @@ int main() {
     setlocale(LC_ALL, "en_US.UTF-8");
     printf("\033[?25l");
     
+    // Set up non-blocking input
     set_nonblocking_input();
 
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -211,8 +216,8 @@ int main() {
                 frame_count++;
             } else {
                 render_frame(frame_data);
-                usleep(33333);
-                frame--;  
+                usleep(33333);  // Reduced CPU usage while paused
+                frame--;  // Stay on current frame while paused
             }
         }
         
