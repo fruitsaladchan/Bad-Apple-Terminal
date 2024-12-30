@@ -9,7 +9,6 @@ Play bad apple in your terminal. Displays the animation using braile characters 
 - Clean terminal handling
 - 30 FPS playback
 - exit with Ctrl+C
-- pause / unpause with spacebar
 
 ## Dependencies
 
