@@ -1,3 +1,5 @@
+#define _DEFAULT_SOURCE
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -71,24 +73,29 @@ int count_frames() {
 }
 
 void render_frame(const unsigned char* frame_data) {
-    clear_screen();
-    move_cursor(2);
+    static char output_buffer[HEIGHT * (WIDTH * 4 + 4)]; 
+    char *ptr = output_buffer;
+    
+    ptr += sprintf(ptr, "\033[H\033[2J"); 
+    ptr += sprintf(ptr, "\033[2B");        
     
     for (int y = 0; y < HEIGHT; y++) {
-        printf("  ");
+        ptr += sprintf(ptr, "  ");
         for (int x = 0; x < WIDTH; x++) {
-            printf("%s", get_char(frame_data[y * WIDTH + x]));
+            ptr += sprintf(ptr, "%s", get_char(frame_data[y * WIDTH + x]));
         }
-        printf("\n");
+        ptr += sprintf(ptr, "\n");
     }
+    
+    fwrite(output_buffer, 1, ptr - output_buffer, stdout);
     fflush(stdout);
 }
 
 unsigned long get_microseconds() {
     struct timespec current_time;
     clock_gettime(CLOCK_MONOTONIC, &current_time);
-    return (current_time.tv_sec - start_time.tv_sec) * 1000000 + 
-           (current_time.tv_nsec - start_time.tv_nsec) / 1000;
+    return (unsigned long)current_time.tv_sec * 1000000UL + 
+           (unsigned long)current_time.tv_nsec / 1000UL;
 }
 
 int main() {
@@ -131,7 +138,7 @@ int main() {
     }
 
     // Wait for 150ms before starting
-    usleep(150000);
+    usleep(150000); 
 
     clock_gettime(CLOCK_MONOTONIC, &start_time);
     
@@ -140,22 +147,25 @@ int main() {
     while (running) {
         audio_pos = 0;
         frame_count = 0;
-        clock_gettime(CLOCK_MONOTONIC, &start_time);
+        unsigned long start_time_us = get_microseconds();
 
         for (int frame = 0; frame < total_frames && running; frame++) {
-            unsigned long target_time = frame_count * FRAME_TIME;
-            unsigned long current_time = get_microseconds();
+            unsigned long target_time = start_time_us + (frame * FRAME_TIME);
+            unsigned long current_time;
             
-            if (target_time > current_time) {
-                usleep(target_time - current_time);
-            }
-
             fseek(fp, frame * FRAME_SIZE, SEEK_SET);
             if (fread(frame_data, 1, FRAME_SIZE, fp) != FRAME_SIZE) {
                 printf("Failed to read frame %d\n", frame);
                 break;
             }
-            
+
+            do {
+                current_time = get_microseconds();
+                if (target_time > current_time + 1000) {
+                    usleep(500); 
+                }
+            } while (current_time < target_time && running);
+
             render_frame(frame_data);
             frame_count++;
         }
