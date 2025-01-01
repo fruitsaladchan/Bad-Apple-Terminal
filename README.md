@@ -31,7 +31,7 @@ pip install image
 
 ## Setup Instructions
 
-1. Extract audio from the video:
+1. Extract frames and audio from the video:
 ```bash
 python ./frame-extract.py
 ```
