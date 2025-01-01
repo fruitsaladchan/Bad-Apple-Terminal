@@ -8,7 +8,6 @@ Play bad apple in your terminal. Displays the animation using braile characters 
 - Synchronized audio playback
 - Clean terminal handling
 - 30 FPS playback
-- exit with Ctrl+C
 
 ## Dependencies
 
@@ -34,29 +33,15 @@ pip install image
 
 1. Extract audio from the video:
 ```bash
-ffmpeg -i bad_apple.mp4 -vn -acodec pcm_s16le -ar 44100 -ac 2 audio.wav
-```
-2. makes frame directory
-```bash
-mkdir frames
-```
-
-3. Extract frames from the video:
-```bash
-ffmpeg -i bad_apple.mp4 -vf scale=180:70 -r 30 frames/%d.png
-```
-
-4. Convert frames to grayscale raw format:
-```bash
 python ./frame-extract.py
 ```
 
-5. Compile :
+2. Compile :
 ```bash
 gcc -o badapple badapple.c -lSDL2 $(sdl2-config --cflags)
 ```
 
-6. Run the player:
+3. Run the player:
 ```bash
 ./badapple
 ```
@@ -64,10 +49,8 @@ gcc -o badapple badapple.c -lSDL2 $(sdl2-config --cflags)
 ## Notes
 - The terminal window should be large enough to display 180x70 characters
 - You can change the resilution by editing ./badapple.c & ./frame-extract.py and rerunning all the steps
-- You can delete the .png files in the frames directory after youve run the python converter
 - Make sure your terminal supports UTF-8 and Braille characters
-- The audio file (audio.wav) should be in the same directory as the player
-- If the video seems out of sync, try adjusting the initial delay in the code (currently set to 150ms)
+- If the video seems out of sync, try adjusting the initial delay in the code (currently set to 150ms) and recompiling
 
 ## Troubleshooting
 
@@ -76,13 +59,12 @@ gcc -o badapple badapple.c -lSDL2 $(sdl2-config --cflags)
    - Try running with explicit locale: `LANG=en_US.UTF-8 ./badapple`
 
 2. If audio doesn't play:
-   - Verify audio.wav exists in the correct directory
    - Check SDL2 is installed correctly
    - Check audio device permissions
 
 3. If the video is too large/small:
-   - Adjust your terminal font size. Most terminal will use control +/- to adjust size
-   - Or modify the scale values in the ffmpeg command (step 4)
+   - Adjust your terminal font size. Most terminal will use 'control +/-' to adjust size
+   - Or modify the scale values in the ffmpeg command in the python script
 
 ## File Structure
 ```
@@ -94,5 +76,4 @@ gcc -o badapple badapple.c -lSDL2 $(sdl2-config --cflags)
 ├── audio.wav
 └── frames/
     ├── raw_frames.txt
-    └── [png files]
 ```
