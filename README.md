@@ -1,6 +1,6 @@
 # Bad Apple Terminal Player
 
-Play bad apple in your terminal. Displays the animation using braile characters with synchronized autio playback, written in c
+Play bad apple in your terminal. Displays the animation using braile characters with synced audio playback, written in c
 
 
 ## Features
