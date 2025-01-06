@@ -63,5 +63,5 @@ gcc -o badapple badapple.c -lSDL2 $(sdl2-config --cflags)
 ├── frame-extract.py
 ├── audio.wav
 └── frames/
-    ├── raw_frames.txt
+    └── raw_frames.txt
 ```
