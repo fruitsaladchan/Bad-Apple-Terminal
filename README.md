@@ -26,7 +26,7 @@ sudo pacman -S ffmpeg sdl2 imagemagick
 
 ##### Needed for the python script
 ```bash
-pip install image
+pip install image rich
 ```
 
 ## Setup Instructions
