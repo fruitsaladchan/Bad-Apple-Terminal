@@ -9,17 +9,33 @@ console = Console()
 
 def extract_media():
     with console.status("[bold green]Extracting media...", spinner="dots"):
-        # extract audio
-        audio_cmd = ['ffmpeg', '-i', 'bad_apple.mp4', '-vn', '-acodec', 'pcm_s16le', 
-                    '-ar', '44100', '-ac', '2', 'audio.wav']
-        subprocess.run(audio_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        console.print("[green]✓[/green] Audio extracted")
-        
-        # extract frames
-        frames_cmd = ['ffmpeg', '-i', 'bad_apple.mp4', '-vf', 'scale=180:70',
-                    '-r', '30', 'frames/%d.png']
-        subprocess.run(frames_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        console.print("[green]✓[/green] Frames extracted")
+        try:
+            # extract audio
+            audio_cmd = ['ffmpeg', '-i', 'bad_apple.mp4', '-vn', '-acodec', 'pcm_s16le', 
+                        '-ar', '44100', '-ac', '2', 'audio.wav']
+            audio_process = subprocess.run(
+                audio_cmd + ['-y', '-hide_banner'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            console.print("[green]✓[/green] Audio extracted")
+            
+            # extract frames
+            frames_cmd = ['ffmpeg', '-i', 'bad_apple.mp4', '-vf', 'scale=180:70',
+                        '-r', '30', 'frames/%d.png']
+            frames_process = subprocess.run(
+                frames_cmd + ['-y', '-hide_banner'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            console.print("[green]✓[/green] Frames extracted")
+            
+        except subprocess.CalledProcessError as e:
+            console.print(f"[red]Error during media extraction:[/red] {str(e)}")
+            console.print(f"[red]Error output:[/red] {e.stderr}")
+            raise
 
 def convert_frames():
     frame_num = 1
