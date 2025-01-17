@@ -175,7 +175,7 @@ int main() {
         }
     }
 
- /*   reset_terminal(); */
+    reset_terminal();
     free(frame_data);
     fclose(fp);
     SDL_CloseAudioDevice(audio_device);
