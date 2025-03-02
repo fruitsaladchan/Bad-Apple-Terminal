@@ -2,13 +2,6 @@
 
 Play bad apple in your terminal. Displays the animation using braile characters with synced audio playback, written in c
 
-
-## Features
-- ASCII art animation using Braille characters
-- Synchronized audio playback
-- Clean terminal handling
-- 30 FPS playback
-
 ## Dependencies
 
 Install the required dependencies:
