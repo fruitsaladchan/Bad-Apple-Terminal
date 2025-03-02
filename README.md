@@ -22,7 +22,7 @@ sudo pacman -S ffmpeg sdl2 imagemagick
 pip install image rich
 ```
 
-## Setup Instructions
+## Setup 
 
 1. Extract frames and audio from the video:
 ```bash
@@ -32,11 +32,6 @@ python ./frame-extract.py
 2. Compile :
 ```bash
 gcc -o badapple badapple.c -lSDL2 $(sdl2-config --cflags)
-```
-
-3. Run the player:
-```bash
-./badapple
 ```
 
 ## Notes
