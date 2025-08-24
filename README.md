@@ -7,8 +7,6 @@ Play bad apple in your terminal. Displays the animation using braile characters 
 #### build
 
 ```bash
-make
-#or
 make all
 ```
 
